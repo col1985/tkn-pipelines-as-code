@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1beta1
+kind: CustomRun
+metadata:
+  generateName: builds-todo-api-buildah
+spec:
+  timeout: 60s # set timeouts here.
+  params:
+    - name: searching
+      value: the purpose of my existence
+  customRef:
+    apiVersion: custom.tekton.dev/v1alpha1
+    kind: Example
+    name: exampleName
