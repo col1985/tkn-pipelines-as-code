@@ -6,17 +6,17 @@ spec:
   workspaces:
   - name: shared-workspace
   params:
-  - name: deployment-name
+  - name: deployment_name
     type: string
     description: name of the deployment to be patched
-  - name: git-url
+  - name: repo_url
     type: string
     description: url of the git repo for the code of deployment
-  - name: git-revision
+  - name: revision
     type: string
     description: revision to be used from repo of the code for deployment
     default: master
-  - name: IMAGE
+  - name: IMAGE_REPO
     type: string
     description: image to be build from the code
   tasks:
@@ -35,13 +35,13 @@ spec:
       workspace: shared-workspace
     params:
     - name: URL
-      value: $(params.git-url)
+      value: $(params.repo_url)
     - name: SUBDIRECTORY
       value: ""
     - name: DELETE_EXISTING
       value: "true"
     - name: REVISION
-      value: $(params.git-revision)
+      value: $(params.revision)
   - name: build-image
     taskRef:
       resolver: cluster
@@ -54,7 +54,7 @@ spec:
         value: openshift-pipelines
     params:
     - name: IMAGE
-      value: $(params.IMAGE)
+      value: $(params.IMAGE_REPO)
     workspaces:
     - name: source
       workspace: shared-workspace
