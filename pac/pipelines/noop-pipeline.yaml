@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: build-and-push
+spec:
+  workspaces:
+  - name: shared-workspace
+  params:
+  - name: build_name
+    type: string
+    description: name of the deployment to be patched
+  tasks:
+  - name: noop-task
+    displayName: Task with no effect
+    runAfter: []
+    workspaces:
+    - name: shared-workspace
+      workspace: shared-workspace
+    taskSpec:
+      workspaces:
+        - name: shared-workspace
+    steps:
+      - name: noop-task
+        image: registry.access.redhat.com/ubi9/ubi-micro
+        workingDir: $(workspaces.source.path)
+        script: |
+          exit 0
