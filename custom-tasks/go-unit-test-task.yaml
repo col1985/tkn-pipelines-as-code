@@ -14,6 +14,10 @@ spec:
       description: The Go package path within the repository to run tests for (e.g., "./...").
       type: string
       default: "./..." # Default to testing all packages
+    - name: context_dir
+      description: The name of the coverage profile file (e.g., "coverage.out").
+      type: string
+      default: "coverage.out"
     - name: coverage-profile-name
       description: The name of the coverage profile file (e.g., "coverage.out").
       type: string
@@ -32,6 +36,7 @@ spec:
       script: |
         #!/usr/bin/env bash
         set -euo pipefail
+        cd $(params.context_dir)
         echo "Running Go tests for package: $(params.package-path) with coverage profiling..."
         # Run tests and generate a coverage profile file (e.g., coverage.out)
         go test -v -coverprofile=$(params.coverage-profile-name) $(params.package-path)
@@ -41,6 +46,7 @@ spec:
       script: |
         #!/usr/bin/env bash
         set -euo pipefail
+        cd $(params.context_dir)
         echo "Generating HTML coverage report from $(params.coverage-profile-name)..."
         # Generate an HTML report from the coverage profile
         go tool cover -html=$(params.coverage-profile-name) -o $(params.coverage-html-report-name)

@@ -80,7 +80,9 @@ spec:
     - name: unit-tests
       taskRef:
         name: golang-unit-test
-      params: []
+      params:
+        - name: context_dir
+          value: $(params.context_dir)
       workspaces:
         - name: source
           workspace: shared-workspace
