@@ -66,6 +66,9 @@ spec:
           value: --verbose
         - name: context
           value: $(params.context_dir)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
       runAfter:
         - fetch-repository
     - name: build-image
