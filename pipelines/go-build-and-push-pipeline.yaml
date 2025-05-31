@@ -14,6 +14,9 @@ spec:
     - name: build_name
       type: string
       description: name of the deployment to be patched
+    - name: package
+      type: string
+      description: name of the deployment to be patched
     - name: repo_url
       type: string
       description: url of the git repo for the code of deployment
@@ -62,7 +65,7 @@ spec:
           - name: context
             value: $(params.context_dir)
           - name: package
-            value: github.com/tektoncd/pipeline
+            value: $(params.package)
         runAfter:
           - fetch-repository
     - name: build-image
