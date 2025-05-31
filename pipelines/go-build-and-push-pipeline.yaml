@@ -59,15 +59,15 @@ spec:
     - name: golangci-lint
       taskRef:
         name: golangci-lint
-        params:
-          - name: package
-            value: .
-          - name: flags
-            value: --verbose
-          - name: context
-            value: $(params.context_dir)
-        runAfter:
-          - fetch-repository
+      params:
+        - name: package
+          value: .
+        - name: flags
+          value: --verbose
+        - name: context
+          value: $(params.context_dir)
+      runAfter:
+        - fetch-repository
     - name: build-image
       taskRef:
         resolver: cluster
