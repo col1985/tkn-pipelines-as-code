@@ -59,6 +59,10 @@ spec:
         params:
           - name: flags
             value: --verbose
+          - name: context
+            value: $(params.context_dir)
+          - name: package
+            value: github.com/tektoncd/pipeline
     - name: build-image
       taskRef:
         resolver: cluster
