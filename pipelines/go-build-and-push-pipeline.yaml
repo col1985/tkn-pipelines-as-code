@@ -65,7 +65,7 @@ spec:
           - name: context
             value: $(params.context_dir)
           - name: package
-            value: $(params.package)
+            value: .
         runAfter:
           - fetch-repository
     - name: build-image
