@@ -4,7 +4,7 @@ metadata:
   name: go-build-and-push
   annotations:
     # Use golangci-lint from the hub to test our Golang project
-    pipelinesascode.tekton.dev/task-1: "golangci-lint"
+    pipelinesascode.tekton.dev/task: "golangci-lint"
 spec:
   workspaces:
     - name: shared-workspace
@@ -56,16 +56,16 @@ spec:
           value: "true"
         - name: REVISION
           value: $(params.revision)
-    - name: go-linter
+    - name: golangci-lint
       taskRef:
         name: golangci-lint
         params:
+          - name: package
+            value: .
           - name: flags
             value: --verbose
           - name: context
             value: $(params.context_dir)
-          - name: package
-            value: .
         runAfter:
           - fetch-repository
     - name: build-image
