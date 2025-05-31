@@ -2,6 +2,9 @@ apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
   name: build-and-push
+  annotations:
+    # Use golangci-lint from the hub to test our Golang project
+    pipelinesascode.tekton.dev/task-1: "golangci-lint"
 spec:
   workspaces:
   - name: shared-workspace
@@ -50,6 +53,16 @@ spec:
       value: "true"
     - name: REVISION
       value: $(params.revision)
+  - name: linter
+    taskRef:
+      resolver: cluster
+      params:
+      - name: kind
+        value: task
+      - name: name
+        value: golangci-lint
+      - name: namespace
+        value: openshift-pipelines
   - name: build-image
     taskRef:
       resolver: cluster
