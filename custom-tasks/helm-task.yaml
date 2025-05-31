@@ -1,0 +1,73 @@
+apiVersion: tekton.dev/v1 # or tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: helm-lint-validate-package-push
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.17.0"
+    tekton.dev/displayName: "Helm Tooling"
+spec:
+  params:
+    - name: app_name
+      description: Name of the app.
+      type: string
+      default: "my-app"
+    - name: image_tag
+      description: image tag to use for helm chart.
+      type: string
+      default: "my-app"
+    - name: chart_name
+      description: Name of the helm chart.
+      type: string
+      default: "my-app-chart"
+    - name: context_dir
+      description: Directory where Helm chart is stored.
+      type: string
+      default: "./"
+    - name: helm_registry
+      description: Registry to store packaged Helm Chart.
+      type: string
+      default: "oci://quay.io/cbennett"
+  workspaces:
+    - name: source
+      description: The workspace where the source code and charts are located.
+  steps:
+    - name: lint-chart-step
+      image: quay.io/cbennett/helm-cli:v0.0.2
+      script: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+        echo "Check Helm Version"
+        helm version
+
+        echo "Lint $(params.chart_name)"
+        cd $(params.context_dir)
+        helm lint $(params.chart_name)
+    # - name: template-chart-step
+    #   image: quay.io/cbennett/helm-cli:v0.0.2
+    #   script: |
+    #           echo "Check Helm Version"
+    #           helm version
+
+    #           echo "Lint $(params.chart_name)"
+    #           cd $(params.context_dir)
+    #           helm template $(params.chart_name)
+    # - name: package-chart-step
+    #   image: quay.io/cbennett/helm-cli:v0.0.2
+    #   script: |
+    #           echo "Check Helm Version"
+    #           helm version
+
+    #           echo "Lint $(params.chart_name)"
+    #           cd $(params.context_dir)
+    #           helm lint $(params.chart_name)
+    # - name: push-chart-step
+    #   image: quay.io/cbennett/helm-cli:v0.0.2
+    #   script: |
+    #           echo "Check Helm Version"
+    #           helm version
+
+    #           echo "Lint $(params.chart_name)"
+    #           cd $(params.context_dir)
+    #           helm lint $(params.chart_name)

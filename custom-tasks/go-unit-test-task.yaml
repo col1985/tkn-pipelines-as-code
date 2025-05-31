@@ -15,9 +15,9 @@ spec:
       type: string
       default: "./..." # Default to testing all packages
     - name: context_dir
-      description: The name of the coverage profile file (e.g., "coverage.out").
+      description: Directory where Go packages are stored.
       type: string
-      default: "coverage.out"
+      default: "./"
     - name: coverage-profile-name
       description: The name of the coverage profile file (e.g., "coverage.out").
       type: string
