@@ -16,7 +16,7 @@ spec:
     - name: image_tag
       description: image tag to use for helm chart.
       type: string
-      default: "my-app"
+      default: "latest"
     - name: chart_name
       description: Name of the helm chart.
       type: string

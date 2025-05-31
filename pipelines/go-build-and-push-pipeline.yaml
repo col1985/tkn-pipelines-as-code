@@ -90,7 +90,7 @@ spec:
           workspace: shared-workspace
       runAfter:
         - golangci-lint
-    - name: build-image
+    - name: build-push-tag-image
       displayName: Build and Push Todo API Image
       taskRef:
         resolver: cluster
@@ -115,3 +115,21 @@ spec:
           workspace: dockerconfig-ws
       runAfter:
         - unit-tests
+    - name: helm
+      displayName: Lint, Template, Package and Push with Helm
+      taskRef:
+        name: helm-lint-validate-package-push
+      params:
+        - name: context_dir
+          value: $(params.context_dir)
+        - name: helm_registry
+          value: oci://quay.io/cbennett
+        - name: chart_name
+          value: todo-app-api-chart
+        - name: app_name
+          value: todo-app-api
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - build-push-tag-image
