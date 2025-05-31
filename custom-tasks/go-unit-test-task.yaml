@@ -23,7 +23,7 @@ spec:
       type: string
       default: "coverage.html"
   workspaces:
-    - name: shared-workspace
+    - name: source
       description: The workspace where the source code and coverage reports are located.
   steps:
     - name: run-go-tests-with-coverage
