@@ -55,14 +55,10 @@ spec:
           value: $(params.revision)
     - name: linter
       taskRef:
-        resolver: cluster
+        name: golangci-lint
         params:
-          - name: kind
-            value: task
-          - name: name
-            value: golangci-lint
-          - name: namespace
-            value: openshift-pipelines
+          - name: flags
+            value: --verbose
     - name: build-image
       taskRef:
         resolver: cluster
