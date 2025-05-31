@@ -5,8 +5,8 @@ metadata:
   annotations:
     # Use golangci-lint from the hub to test our Golang project
     pipelinesascode.tekton.dev/task: "golangci-lint"
-
-    pipelinesascode.tekton.dev/task-1: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/go-unit-test-task.yaml
+    pipelinesascode.tekton.dev/task-1: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/noop-task.yaml
+    pipelinesascode.tekton.dev/task-2: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/go-unit-test-task.yaml
 spec:
   workspaces:
     - name: shared-workspace
@@ -59,19 +59,9 @@ spec:
         - name: REVISION
           value: $(params.revision)
     - name: golangci-lint
-      displayName: Task with no effect
-      taskSpec:
-        workspaces:
-          - name: shared-workspace
-      workspaces:
-      - name: shared-workspace
-        workspace: shared-workspace
-      steps:
-        - name: noop-task
-          image: registry.access.redhat.com/ubi9/ubi-micro
-          workingDir: $(workspaces.source.path)
-          script: |
-            exit 0
+      displayName: Golang Linter task - noop
+      taskRef:
+        name: noop-task
       runAfter:
         - fetch-repository
     # - name: golangci-lint

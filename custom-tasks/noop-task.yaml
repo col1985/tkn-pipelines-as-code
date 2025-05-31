@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1 # or tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: noop-task
+spec:
+  params: []
+  steps:
+    - name: noop-task
+      image: registry.access.redhat.com/ubi9/ubi-micro
+      command: ["echo"]
