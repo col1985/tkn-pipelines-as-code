@@ -77,7 +77,7 @@ spec:
     #   workspaces:
     #     - name: source
     #       workspace: shared-workspace
-    - name: run-unit-tests
+    - name: unit-tests
       taskRef:
         name: golang-unit-test
       params: []
@@ -109,4 +109,4 @@ spec:
         - name: dockerconfig
           workspace: dockerconfig-ws
       runAfter:
-        - golangci-lint
+        - unit-tests
