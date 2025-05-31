@@ -1,0 +1,49 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: golang-unit-test
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.17.0"
+    tekton.dev/displayName: "Go Unit Test"
+spec:
+  # Define parameters for the task, allowing it to be reusable.
+  params:
+    - name: package-path
+      description: The Go package path within the repository to run tests for (e.g., "./...").
+      type: string
+      default: "./..." # Default to testing all packages
+    - name: coverage-profile-name
+      description: The name of the coverage profile file (e.g., "coverage.out").
+      type: string
+      default: "coverage.out"
+    - name: coverage-html-report-name
+      description: The name of the HTML coverage report file (e.g., "coverage.html").
+      type: string
+      default: "coverage.html"
+  workspaces:
+    - name: shared-workspace
+      description: The workspace where the source code and coverage reports are located.
+  steps:
+    - name: run-go-tests-with-coverage
+      image: registry.access.redhat.com/ubi8/go-toolset:1.23.6 # Using the specified Go toolset image
+      workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
+      script: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+        echo "Running Go tests for package: $(params.package-path) with coverage profiling..."
+        # Run tests and generate a coverage profile file (e.g., coverage.out)
+        go test -v -coverprofile=$(params.coverage-profile-name) $(params.package-path)
+    - name: generate-coverage-report
+      image: registry.access.redhat.com/ubi8/go-toolset:1.23.6
+      workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
+      script: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+        echo "Generating HTML coverage report from $(params.coverage-profile-name)..."
+        # Generate an HTML report from the coverage profile
+        go tool cover -html=$(params.coverage-profile-name) -o $(params.coverage-html-report-name)
+        echo "Coverage report generated at $(params.coverage-html-report-name)"
+        # Optionally, display a summary of the coverage
+        go tool cover -func=$(params.coverage-profile-name)
