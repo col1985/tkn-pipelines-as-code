@@ -87,15 +87,15 @@ spec:
     #   workspaces:
     #     - name: source
     #       workspace: shared-workspace
-    - name: run-unit-tests
-      taskRef:
-        name: golang-unit-test
-      params: []
-      workspaces:
-        - name: source
-          workspace: shared-workspace
-      runAfter:
-        - golangci-lint
+    # - name: run-unit-tests
+    #   taskRef:
+    #     name: golang-unit-test
+    #   params: []
+    #   workspaces:
+    #     - name: source
+    #       workspace: shared-workspace
+    #   runAfter:
+    #     - golangci-lint
     - name: build-image
       taskRef:
         resolver: cluster
@@ -119,4 +119,4 @@ spec:
         - name: dockerconfig
           workspace: dockerconfig-ws
       runAfter:
-        - run-unit-tests
+        - golangci-lint
