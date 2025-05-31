@@ -91,4 +91,4 @@ spec:
         - name: dockerconfig
           workspace: dockerconfig-ws
       runAfter:
-        - go-linter
+        - golangci-lint
