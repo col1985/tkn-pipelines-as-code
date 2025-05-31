@@ -53,7 +53,7 @@ spec:
           value: "true"
         - name: REVISION
           value: $(params.revision)
-    - name: linter
+    - name: go-linter
       taskRef:
         name: golangci-lint
         params:
@@ -63,6 +63,8 @@ spec:
             value: $(params.context_dir)
           - name: package
             value: github.com/tektoncd/pipeline
+        runAfter:
+          - fetch-repository
     - name: build-image
       taskRef:
         resolver: cluster
@@ -86,4 +88,4 @@ spec:
         - name: dockerconfig
           workspace: dockerconfig-ws
       runAfter:
-        - fetch-repository
+        - go-linter
