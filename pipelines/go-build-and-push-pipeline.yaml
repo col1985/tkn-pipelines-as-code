@@ -5,8 +5,8 @@ metadata:
   annotations:
     # Use golangci-lint from the hub to test our Golang project
     pipelinesascode.tekton.dev/task: "golangci-lint"
-    pipelinesascode.tekton.dev/task-1: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/noop-task.yaml
-    pipelinesascode.tekton.dev/task-2: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/go-unit-test-task.yaml
+    pipelinesascode.tekton.dev/task-1: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/utils/noop-task.yaml
+    pipelinesascode.tekton.dev/task-2: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/go/go-unit-test-task.yaml
 spec:
   workspaces:
     - name: shared-workspace
