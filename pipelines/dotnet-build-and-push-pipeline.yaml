@@ -25,13 +25,13 @@ spec:
     - name: project-name
       type: string
       description: name of the deployment to be patched
-    - name: release_dir
+    - name: release-dir
       type: string
       description: name of the deployment to be patched
     - name: repo_url
       type: string
       description: url of the git repo for the code of deployment
-    - name: context_dir
+    - name: context-dir
       type: string
       description: url of the git repo for the code of deployment
     - name: revision
@@ -87,7 +87,7 @@ spec:
         - name: base-image
           value: $(params.base-image)
         - name: context-dir
-          value: $(params.context_dir)
+          value: $(params.context-dir)
         - name: release-dir
           value: $(params.release-dir)
         - name: base-image
@@ -103,11 +103,11 @@ spec:
         name: dotnet-unit-test
       params:
         - name: project-name
-          value: $(params.project_name)
+          value: $(params.project-name)
         - name: base-image
           value: $(params.base-image)
         - name: context-dir
-          value: $(params.context_dir)
+          value: $(params.context-dir)
       workspaces:
         - name: source
           workspace: shared-workspace
@@ -128,7 +128,7 @@ spec:
         - name: IMAGE
           value: $(params.registry-url):$(params:version)
         - name: CONTEXT
-          value: $(params.context_dir)
+          value: $(params.context-dir)
         - name: DOCKERFILE
           value: $(params.dockerfile)
       workspaces:
