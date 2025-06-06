@@ -31,7 +31,7 @@ spec:
       description: The workspace where the source code and coverage reports are located.
   steps:
     - name: build-publish-release
-      image: $(base-image)
+      image: registry.redhat.io/rhel8/dotnet-90:latest
       workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
       script: |
         #!/usr/bin/env bash

@@ -21,7 +21,7 @@ spec:
     - name: base-image
       description: The name of the coverage profile file (e.g., "coverage.out").
       type: string
-      default: registry.redhat.io/rhel8/dotnet-90:9.0-8.20250529153305
+      default: registry.redhat.io/rhel8/dotnet-90:latest
   workspaces:
     - name: source
       description: The workspace where the source code and coverage reports are located.
