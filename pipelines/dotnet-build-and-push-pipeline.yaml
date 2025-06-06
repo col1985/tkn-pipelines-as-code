@@ -124,7 +124,7 @@ spec:
             value: openshift-pipelines
       params:
         - name: IMAGE
-          value: $(params.registry-url):$(params:version)
+          value: $(params.registry-url):$(params.version)
         - name: CONTEXT
           value: $(params.context-dir)
         - name: DOCKERFILE

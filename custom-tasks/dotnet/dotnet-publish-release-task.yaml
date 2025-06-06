@@ -38,4 +38,4 @@ spec:
         set -euo pipefail
         echo "Publishing the: $(params.project-name).csproj artifact to $(params.release-dir)"
 
-        dotnet publish $(params.project-name)/$(params.project-name).csproj -c Release -o $(params.release-dir) && ls -lha
+        dotnet publish $(params.project-name)/$(params.project-name).csproj -c Release -o $(params.release-dir)
