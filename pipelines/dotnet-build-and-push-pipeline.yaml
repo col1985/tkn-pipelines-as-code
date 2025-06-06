@@ -90,8 +90,6 @@ spec:
           value: $(params.context-dir)
         - name: release-dir
           value: $(params.release-dir)
-        - name: base-image
-          value: $(params.base-image)
       workspaces:
         - name: source
           workspace: shared-workspace
