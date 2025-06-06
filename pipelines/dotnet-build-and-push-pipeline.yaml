@@ -1,0 +1,152 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: dotnet-build-test-bake-push
+  annotations:
+    # Use golangci-lint from the hub to test our Golang project
+    # pipelinesascode.tekton.dev/task: "golangci-lint"
+    pipelinesascode.tekton.dev/task-1: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/util/noop-task.yaml
+    pipelinesascode.tekton.dev/task-2: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/dotnet/dotnet-publish-release-task.yaml
+    pipelinesascode.tekton.dev/task-3: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/dotnet/dotnet-unit-test-task.yaml
+    # pipelinesascode.tekton.dev/task-4: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/helm-task.yaml
+spec:
+  workspaces:
+    - name: shared-workspace
+    - name: dockerconfig-ws
+      optional: true
+  params:
+    - name: base-image
+      type: string
+      description: name of the base image for custom tasks.
+      default: registry.redhat.io/rhel8/dotnet-90:9.0-8.20250529153305
+    - name: package
+      type: string
+      description: name of the deployment to be patched
+    - name: repo_url
+      type: string
+      description: url of the git repo for the code of deployment
+    - name: context_dir
+      type: string
+      description: url of the git repo for the code of deployment
+    - name: revision
+      type: string
+      description: revision to be used from repo of the code for deployment
+      default: main
+    - name: dockerfile
+      type: string
+      description: image to be build from the code
+    - name: version
+      type: string
+      description: image to be build from the code
+    - name: registry-url
+      type: string
+      description: image to be build from the code
+  tasks:
+    - name: fetch-repository
+      displayName: Git clone $(params.app_name) source code
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params:
+        - name: URL
+          value: $(params.repo_url)
+        - name: SUBDIRECTORY
+          value: ""
+        - name: DELETE_EXISTING
+          value: "true"
+        - name: REVISION
+          value: $(params.revision)
+    - name: sast
+      displayName: .NET Linter task - noop
+      taskRef:
+        name: noop-task
+      runAfter:
+        - fetch-repository
+    - name: publish-release
+      displayName: .NET Publish Release Task
+      taskRef:
+        name: dotnet-publish-release
+      params:
+        - name: project-name
+          value: $(params.project_name)
+        - name: base-image
+          value: $(params.base-image)
+        - name: context-dir
+          value: $(params.context_dir)
+        - name: release-dir
+          value: $(params.release_dir)
+        - name: base-image
+          value: $(params.base-image)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - sast
+    - name: unit-tests
+      displayName: Unit Tests
+      taskRef:
+        name: dotnet-unit-test
+      params:
+        - name: project-name
+          value: $(params.project_name)
+        - name: base-image
+          value: $(params.base-image)
+        - name: context-dir
+          value: $(params.context_dir)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      runAfter:
+        - publish-release
+    - name: build-push-tag-image
+      displayName: Build and Push .NET Image
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: buildah
+          - name: namespace
+            value: openshift-pipelines
+      params:
+        - name: IMAGE
+          value: $(params.registry-url):$(params:version)
+        - name: CONTEXT
+          value: $(params.context_dir)
+        - name: DOCKERFILE
+          value: $(params.dockerfile)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: dockerconfig
+          workspace: dockerconfig-ws
+      runAfter:
+        - unit-tests
+    # - name: helm
+    #   displayName: Lint, Template, Package and Push with Helm
+    #   taskRef:
+    #     name: helm-lint-validate-package-push
+    #   params:
+    #     - name: context_dir
+    #       value: $(params.context_dir)
+    #     - name: helm_registry
+    #       value: oci://quay.io/cbennett
+    #     - name: chart_name
+    #       value: todo-app-api-chart
+    #     - name: app_name
+    #       value: todo-app-api
+    #   workspaces:
+    #     - name: source
+    #       workspace: shared-workspace
+    #   runAfter:
+    #     - build-push-tag-image

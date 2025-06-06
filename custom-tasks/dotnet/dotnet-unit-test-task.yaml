@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: dotnet-unit-test
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.17.0"
+    tekton.dev/displayName: ".NET v8.0 Unit Test"
+spec:
+  # Define parameters for the task, allowing it to be reusable.
+  params:
+    - name: project-name
+      description: The csproj name within the repository to publish a release.
+      type: string
+      default: "ConsoleApp"
+    - name: context-dir
+      description: Directory where the .NET project are stored.
+      type: string
+      default: "."
+    - name: base-image
+      description: The name of the coverage profile file (e.g., "coverage.out").
+      type: string
+      default: registry.redhat.io/rhel8/dotnet-90:9.0-8.20250529153305
+  workspaces:
+    - name: source
+      description: The workspace where the source code and coverage reports are located.
+  steps:
+    - name: run-unit-tests-with-coverage
+      image: $(params.base-image)
+      workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
+      script: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+        echo "Running Unit tests for App: $(params.project-name)..."
+        dotnet test --collect "XPlat Code Coverage"
