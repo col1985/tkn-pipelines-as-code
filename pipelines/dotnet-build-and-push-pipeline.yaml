@@ -22,6 +22,12 @@ spec:
     - name: package
       type: string
       description: name of the deployment to be patched
+    - name: project-name
+      type: string
+      description: name of the deployment to be patched
+    - name: release_dir
+      type: string
+      description: name of the deployment to be patched
     - name: repo_url
       type: string
       description: url of the git repo for the code of deployment
@@ -77,13 +83,13 @@ spec:
         name: dotnet-publish-release
       params:
         - name: project-name
-          value: $(params.project_name)
+          value: $(params.project-name)
         - name: base-image
           value: $(params.base-image)
         - name: context-dir
           value: $(params.context_dir)
         - name: release-dir
-          value: $(params.release_dir)
+          value: $(params.release-dir)
         - name: base-image
           value: $(params.base-image)
       workspaces:
