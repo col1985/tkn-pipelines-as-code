@@ -4,7 +4,7 @@ metadata:
   name: dotnet-build-test-bake-push
   annotations:
     # Use golangci-lint from the hub to test our Golang project
-    # pipelinesascode.tekton.dev/task: "golangci-lint"
+    pipelinesascode.tekton.dev/task: "sonarqube-scanner"
     pipelinesascode.tekton.dev/task-1: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/util/noop-task.yaml
     pipelinesascode.tekton.dev/task-2: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/dotnet/dotnet-publish-release-task.yaml
     pipelinesascode.tekton.dev/task-3: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/dotnet/dotnet-unit-test-task.yaml
@@ -47,6 +47,15 @@ spec:
     - name: registry-url
       type: string
       description: image to be build from the code
+    - name: sonar-host-url
+      type: string
+      description: image to be build from the code
+    - name: sonar-project-key
+      type: string
+      description: image to be build from the code
+    - name: sonar-organization
+      type: string
+      description: image to be build from the code
   tasks:
     - name: fetch-repository
       displayName: Git clone $(params.app_name) source code
@@ -74,7 +83,23 @@ spec:
     - name: sast
       displayName: .NET Linter task - noop
       taskRef:
-        name: noop-task
+        name: sonarqube-scanner
+      params:
+        - name: SONAR_HOST_URL
+          value: $(params.sonar-host-url)
+        - name: SONAR_ORGANIZATION
+          value: $(params.sonar-organization)
+        - name: SOURCE_TO_SCAN
+          value: $(params.context-dir)
+        - name: SONAR_PROJECT_KEY
+          value: $(params.sonar-project-key)
+        - name: SONAR_SCANNER_IMAGE
+          value: sonarsource/sonar-scanner-cli:5.6.1
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: sonar-settings
+          workspace: sonar-settings
       runAfter:
         - fetch-repository
     - name: publish-release
