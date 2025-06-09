@@ -56,6 +56,10 @@ spec:
     - name: sonar-organization
       type: string
       description: image to be build from the code
+    - name: src-to-scan
+      type: string
+      description: source code to be scanned by SonarQube
+      default: "."
   tasks:
     - name: fetch-repository
       displayName: Git clone $(params.app_name) source code
@@ -90,11 +94,11 @@ spec:
         - name: SONAR_ORGANIZATION
           value: $(params.sonar-organization)
         - name: SOURCE_TO_SCAN
-          value: $(params.context-dir)
+          value: $(params.src-to-scan)
         - name: SONAR_PROJECT_KEY
           value: $(params.sonar-project-key)
-        - name: SONAR_SCANNER_IMAGE
-          value: sonarsource/sonar-scanner-cli:5.6.1
+        # - name: SONAR_SCANNER_IMAGE
+        #   value: sonarsource/sonar-scanner-cli:5.6.1
       workspaces:
         - name: source
           workspace: shared-workspace
