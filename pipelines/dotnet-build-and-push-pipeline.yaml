@@ -102,8 +102,8 @@ spec:
       workspaces:
         - name: source
           workspace: shared-workspace
-        - name: sonar-settings
-          workspace: sonar-settings
+        # - name: sonar-settings
+        #   workspace: sonar-settings
       runAfter:
         - fetch-repository
     - name: publish-release
