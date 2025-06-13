@@ -8,7 +8,7 @@ metadata:
     pipelinesascode.tekton.dev/task-1: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/util/noop-task.yaml
     pipelinesascode.tekton.dev/task-2: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/dotnet/dotnet-publish-release-task.yaml
     pipelinesascode.tekton.dev/task-3: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/dotnet/dotnet-unit-test-task.yaml
-    pipelinesascode.tekton.dev/task-4: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/utils/update-umbrella-chart-task.yaml
+    pipelinesascode.tekton.dev/task-4: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/util/update-umbrella-chart-task.yaml
     # pipelinesascode.tekton.dev/task-4: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/helm-task.yaml
 spec:
   workspaces:
