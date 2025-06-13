@@ -8,6 +8,7 @@ metadata:
     pipelinesascode.tekton.dev/task-1: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/util/noop-task.yaml
     pipelinesascode.tekton.dev/task-2: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/dotnet/dotnet-publish-release-task.yaml
     pipelinesascode.tekton.dev/task-3: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/dotnet/dotnet-unit-test-task.yaml
+    pipelinesascode.tekton.dev/task-4: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/utils/update-umbrella-chart-task.yaml
     # pipelinesascode.tekton.dev/task-4: https://github.com/col1985/tkn-pipelines-as-code/blob/main/custom-tasks/helm-task.yaml
 spec:
   workspaces:
@@ -169,32 +170,11 @@ spec:
     - name: update-umbrella-chart
       displayName: Update Umbrella Chart source code
       taskRef:
-        resolver: cluster
-        params:
-          - name: kind
-            value: task
-          - name: name
-            value: git-cli
-          - name: namespace
-            value: openshift-pipelines
+        name: update-umbrella-chart
       workspaces:
         - name: source
           workspace: shared-workspace
-      params:
-        - name: GIT_SCRIPT
-          value: |
-            git init
-            git remote add origin https://github.com/col1985/argocd-sample-apps.git
-            git pull origin main
-            ls -la
-        - name: URL
-          value: $(params.repo_url)
-        - name: SUBDIRECTORY
-          value: ""
-        - name: DELETE_EXISTING
-          value: "true"
-        - name: REVISION
-          value: $(params.revision)
+      params: []
       runAfter:
         - build-push-tag-image
     # - name: helm
