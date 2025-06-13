@@ -195,6 +195,8 @@ spec:
           value: "true"
         - name: REVISION
           value: $(params.revision)
+      runAfter:
+        - build-push-tag-image
     # - name: helm
     #   displayName: Lint, Template, Package and Push with Helm
     #   taskRef:
