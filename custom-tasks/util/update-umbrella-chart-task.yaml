@@ -51,12 +51,12 @@ spec:
         #   value: "true"
         # - name: REVISION
         #   value: $(params.revision)
-    - name: update-repo
-      image: registry.redhat.io/rhel8/dotnet-90:latest
-      workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
-      script: |
-        #!/usr/bin/env bash
-        set -euo pipefail
-        ls -lha
+    # - name: update-repo
+    #   image: registry.redhat.io/rhel8/dotnet-90:latest
+    #   workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
+    #   script: |
+    #     #!/usr/bin/env bash
+    #     set -euo pipefail
+    #     ls -lha
 
-        git status
+    #     git status
