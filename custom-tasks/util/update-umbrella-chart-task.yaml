@@ -43,14 +43,14 @@ spec:
             git remote add origin https://github.com/col1985/argocd-sample-apps.git
             git pull origin main
             ls -la
-        - name: URL
-          value: $(params.repo_url)
-        - name: SUBDIRECTORY
-          value: ""
-        - name: DELETE_EXISTING
-          value: "true"
-        - name: REVISION
-          value: $(params.revision)
+        # - name: URL
+        #   value: $(params.repo_url)
+        # - name: SUBDIRECTORY
+        #   value: ""
+        # - name: DELETE_EXISTING
+        #   value: "true"
+        # - name: REVISION
+        #   value: $(params.revision)
     - name: update-repo
       image: registry.redhat.io/rhel8/dotnet-90:latest
       workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
