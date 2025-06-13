@@ -1,0 +1,8 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: github-pr-merge-listener
+spec:
+  serviceAccountName: pipeline # Ensure this service account has permissions to create PipelineRuns
+  triggers:
+    - triggerRef: github-main-pr-merge-trigger # References the Trigger defined above

@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: promotion-approval-gate
+  labels:
+    app.kubernetes.io/instance: pipeline-promotion
+spec:
+  params:
+    - name: deployment-target
+      description: The environment to deploy to (e.g., 'production')
+      type: string
+      default: production
+    - name: application-name
+      description: The name of the application being deployed
+      type: string
+    - name: image-tag
+      description: The Docker image tag to be deployed
+      type: string
+  steps: []

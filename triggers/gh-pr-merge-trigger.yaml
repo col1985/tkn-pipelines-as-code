@@ -1,0 +1,24 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: Trigger
+metadata:
+  name: github-main-pr-merge-trigger
+spec:
+  bindings:
+    - ref: github-pr-merge-binding # References the TriggerBinding below
+  template:
+    ref: dotnet-build-test-bake-push # References the TriggerTemplate below
+
+  # Interceptors are used to filter and process incoming events.
+  # Here, we use a GitHub interceptor for PR events.
+  interceptors:
+    - ref:
+        name: github # Use the GitHub interceptor
+      params:
+        # We specifically care about 'pull_request' events
+        - name: eventTypes
+          value: ["pull_request"]
+        # If your GitHub webhook uses a secret, configure it here.
+        # - name: secretRef
+        #   value:
+        #     secretName: github-webhook-secret # Replace with your secret name
+        #     secretKey: secretToken           # Replace with your secret key

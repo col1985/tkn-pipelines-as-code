@@ -1,0 +1,35 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-pr-merge-binding
+spec:
+  params:
+    - name: git-repo-url
+      # description: The URL of the target repository
+      value: $(body.pull_request.base.repo.html_url)
+    - name: git-revision
+      # description: The commit SHA of the merged PR on the base branch
+      # For a merged PR, pull_request.merge_commit_sha is the best candidate.
+      # If not present or you prefer the base commit, use $(body.pull_request.base.sha)
+      value: $(body.pull_request.merge_commit_sha)
+    - name: pr-id
+      # description: The ID of the Pull Request
+      value: $(body.pull_request.number)
+    - name: pr-title
+      # description: The title of the Pull Request
+      value: $(body.pull_request.title)
+    - name: head-branch
+      # description: The source branch of the PR
+      value: $(body.pull_request.head.ref)
+    - name: base-branch
+      # description: The target branch of the PR (crucial for our filter)
+      value: $(body.pull_request.base.ref)
+    - name: pr-action
+      # description: The action that triggered the PR event (e.g., 'closed')
+      value: $(body.action)
+    - name: pr-merged
+      # description: Boolean indicating if the PR was merged
+      value: $(body.pull_request.merged)
+    - name: pr-author
+      # description: The GitHub login of the PR author
+      value: $(body.pull_request.user.login)

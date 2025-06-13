@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: update-umbrella-chart
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.17.0"
+    tekton.dev/displayName: "Update Umbrella Chart Env Config Task"
+spec:
+  # Define parameters for the task, allowing it to be reusable.
+  params:
+    - name: project-name
+      description: The csproj name within the repository to publish a release.
+      type: string
+      default: "ConsoleApp"
+    - name: context-dir
+      description: Directory where the .NET project are stored.
+      type: string
+      default: "."
+  workspaces:
+    - name: source
+      description: The workspace for checking out GitOps Config Charts.
+  steps:
+    - name:
+      image: registry.redhat.io/rhel8/dotnet-90:latest
+      workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
+      script: |
+        #!/usr/bin/env bash
+        set -euo pipefail
+        echo "Publishing the: $(params.project-name).csproj artifact to $(params.release-dir)"

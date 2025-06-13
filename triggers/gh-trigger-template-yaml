@@ -1,0 +1,71 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: pipeline-run-on-github-pr-merge-template
+spec:
+  params:
+    - name: git-repo-url
+      description: The URL of the git repository
+    - name: git-revision
+      description: The git revision (commit SHA) to checkout after merge
+    - name: pr-id
+      description: The ID of the Pull Request
+    - name: pr-title
+      description: The title of the Pull Request
+    - name: head-branch
+      description: The source branch of the PR
+    - name: base-branch
+      description: The target branch of the PR
+    - name: pr-action
+      description: The action that triggered the PR event
+    - name: pr-merged
+      description: Boolean indicating if the PR was merged
+    - name: pr-author
+      description: The GitHub login of the PR author
+  resourcetemplates:
+    # Use 'when' expressions to conditionally create the PipelineRun
+    # This ensures the pipeline only runs if the PR was merged to 'main'.
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: build-app-github-pr-merge-run-
+      spec:
+        when:
+          # Condition 1: Ensure the PR action is 'closed'
+          - input: $(tt.params.pr-action)
+            operator: in
+            values: ["closed"]
+          # Condition 2: Ensure the PR was actually merged (not just closed without merge)
+          - input: $(tt.params.pr-merged)
+            operator: in
+            values: ["true"] # Note: The 'merged' field is a boolean in GitHub payload,
+                             # but Tekton params convert it to string 'true' or 'false'.
+          # Condition 3: Ensure the target branch is 'main'
+          - input: $(tt.params.base-branch)
+            operator: in
+            values: ["main"]
+
+        # Replace 'your-pipeline' with the actual name of your Tekton Pipeline
+        pipelineRef:
+          name: dotnet-build-test-bake-push
+
+        params:
+          - name: repo-url
+            value: $(tt.params.git-repo-url)
+          - name: revision
+            value: $(tt.params.git-revision)
+          - name: pr-number
+            value: $(tt.params.pr-id) # Pass PR ID if your pipeline needs it
+          - name: target-branch-name # Pass the target branch to the pipeline for context
+            value: $(tt.params.base-branch)
+
+        workspaces:
+          # If your pipeline needs a workspace, define it here
+          - name: shared-workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi

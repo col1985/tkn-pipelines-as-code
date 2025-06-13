@@ -166,6 +166,35 @@ spec:
           workspace: dockerconfig-ws
       runAfter:
         - unit-tests
+    - name: update-umbrella-chart
+      displayName: Update Umbrella Chart source code
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-cli
+          - name: namespace
+            value: openshift-pipelines
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+      params:
+        - name: GIT_SCRIPT
+          value: |
+            git init
+            git remote add origin https://github.com/col1985/argocd-sample-apps.git
+            git pull origin main
+            ls -la
+        - name: URL
+          value: $(params.repo_url)
+        - name: SUBDIRECTORY
+          value: ""
+        - name: DELETE_EXISTING
+          value: "true"
+        - name: REVISION
+          value: $(params.revision)
     # - name: helm
     #   displayName: Lint, Template, Package and Push with Helm
     #   taskRef:
