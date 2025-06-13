@@ -22,7 +22,7 @@ spec:
     - name: source
       description: The workspace for checking out GitOps Config Charts.
   steps:
-    - name: Checkout Chart source code
+    - name: checkout-chart-src-code
       displayName: Update Umbrella Chart source code
       taskRef:
         resolver: cluster
@@ -51,7 +51,7 @@ spec:
           value: "true"
         - name: REVISION
           value: $(params.revision)
-    - name: Update repo
+    - name: update-repo
       image: registry.redhat.io/rhel8/dotnet-90:latest
       workingDir: $(workspaces.source.path) # The working directory for this step is the shared workspace path
       script: |
