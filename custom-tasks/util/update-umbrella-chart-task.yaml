@@ -23,6 +23,7 @@ spec:
       description: The workspace for checking out GitOps Config Charts.
   steps:
     - name: checkout-chart-src-code
+      image: registry.redhat.io/openshift-pipelines/git-cli:latest
       displayName: Update Umbrella Chart source code
       taskRef:
         resolver: cluster
