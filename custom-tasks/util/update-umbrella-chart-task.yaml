@@ -25,15 +25,15 @@ spec:
     - name: checkout-chart-src-code
       image: registry.redhat.io/openshift-pipelines/git-cli:latest
       displayName: Update Umbrella Chart source code
-      taskRef:
-        resolver: cluster
-        params:
-          - name: kind
-            value: task
-          - name: name
-            value: git-cli
-          - name: namespace
-            value: openshift-pipelines
+      # taskRef:
+      #   resolver: cluster
+      #   params:
+      #     - name: kind
+      #       value: task
+      #     - name: name
+      #       value: git-cli
+      #     - name: namespace
+      #       value: openshift-pipelines
       workspaces:
         - name: source
           workspace: shared-workspace
