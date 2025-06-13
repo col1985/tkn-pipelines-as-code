@@ -43,8 +43,8 @@ spec:
             git remote add origin https://github.com/col1985/argocd-sample-apps.git
             git pull origin main
             ls -la
-        # - name: URL
-        #   value: $(params.repo_url)
+        - name: URL
+          value: https://github.com/col1985/argocd-sample-apps.git
         # - name: SUBDIRECTORY
         #   value: ""
         # - name: DELETE_EXISTING
